@@ -6,7 +6,53 @@ import { themeConfig } from '@/config'
 import { getSortedFilteredPosts } from '@/utils/draft'
 
 // 获取所有文章
+---
+import IndexLayout from '@/layouts/IndexLayout.astro'
+import PostList from '@/components/widgets/PostList.astro'
+import { getSortedFilteredPosts } from '@/utils/draft'
+
 const allPosts = await getSortedFilteredPosts()
+
+// 1. 先把属于“地球大脑”的文章拎出来
+const brainPosts = allPosts.filter(post => post.data.category === 'earth-brain')
+
+// 2. 分类：把拎出来的文章按标签（tags）塞进不同的“抽屉”
+const moviePosts = brainPosts.filter(post => post.data.tags?.includes('电影'))
+const gamePosts = brainPosts.filter(post => post.data.tags?.includes('游戏'))
+const otherPosts = brainPosts.filter(post => !post.data.tags?.includes('电影') && !post.data.tags?.includes('游戏'))
+---
+
+<IndexLayout title="🌍 地球大脑">
+  <section>
+    <h1 style="font-size: 2rem; margin-bottom: 2rem;">🌍 地球大脑</h1>
+
+    {moviePosts.length > 0 && (
+      <div class="category-section">
+        <h2 style="display: flex; align-items: center; gap: 10px;">
+          <img src="/movie-icon.png" style="width: 30px;" /> 电影记录
+        </h2>
+        <PostList posts={moviePosts} />
+      </div>
+    )}
+
+    {gamePosts.length > 0 && (
+      <div class="category-section">
+        <h2 style="display: flex; align-items: center; gap: 10px;">
+          <img src="/game-icon.png" style="width: 30px;" /> 游戏存档
+        </h2>
+        <PostList posts={gamePosts} />
+      </div>
+    )}
+  </section>
+</IndexLayout>
+
+<style>
+  .category-section {
+    margin-bottom: 3rem; /* 每一块分类之间空开大一点，更有呼吸感 */
+    border-top: 1px solid #eee; /* 加一条细细的分割线 */
+    padding-top: 1rem;
+  }
+</style>
 
 // 【关键修改】只筛选标题里带有“🌍”或者你在文章里打过“地球大脑”标签的内容
 // 或者简单点：筛选 category 为 "earth-brain" 的文章
