@@ -1,80 +1,82 @@
 ---
 import IndexLayout from '@/layouts/IndexLayout.astro'
-// 我们不用默认的 About 组件，换成地球大脑的介绍
 import PostList from '@/components/widgets/PostList.astro'
 import { themeConfig } from '@/config'
 import { getSortedFilteredPosts } from '@/utils/draft'
 
-// 获取所有文章
----
-import IndexLayout from '@/layouts/IndexLayout.astro'
-import PostList from '@/components/widgets/PostList.astro'
-import { getSortedFilteredPosts } from '@/utils/draft'
-
 const allPosts = await getSortedFilteredPosts()
 
-// 1. 先把属于“地球大脑”的文章拎出来
-const brainPosts = allPosts.filter(post => post.data.category === 'earth-brain')
-
-// 2. 分类：把拎出来的文章按标签（tags）塞进不同的“抽屉”
-const moviePosts = brainPosts.filter(post => post.data.tags?.includes('电影'))
-const gamePosts = brainPosts.filter(post => post.data.tags?.includes('游戏'))
-const otherPosts = brainPosts.filter(post => !post.data.tags?.includes('电影') && !post.data.tags?.includes('游戏'))
----
-
-<IndexLayout title="🌍 地球大脑">
-  <section>
-    <h1 style="font-size: 2rem; margin-bottom: 2rem;">🌍 地球大脑</h1>
-
-    {moviePosts.length > 0 && (
-      <div class="category-section">
-        <h2 style="display: flex; align-items: center; gap: 10px;">
-          <img src="/movie-icon.png" style="width: 30px;" /> 电影记录
-        </h2>
-        <PostList posts={moviePosts} />
-      </div>
-    )}
-
-    {gamePosts.length > 0 && (
-      <div class="category-section">
-        <h2 style="display: flex; align-items: center; gap: 10px;">
-          <img src="/game-icon.png" style="width: 30px;" /> 游戏存档
-        </h2>
-        <PostList posts={gamePosts} />
-      </div>
-    )}
-  </section>
-</IndexLayout>
-
-<style>
-  .category-section {
-    margin-bottom: 3rem; /* 每一块分类之间空开大一点，更有呼吸感 */
-    border-top: 1px solid #eee; /* 加一条细细的分割线 */
-    padding-top: 1rem;
-  }
-</style>
-
-// 【关键修改】只筛选标题里带有“🌍”或者你在文章里打过“地球大脑”标签的内容
-// 或者简单点：筛选 category 为 "earth-brain" 的文章
-const posts = allPosts.filter(post => 
+// 1. 筛选出所有属于“地球大脑”的文章
+const brainPosts = allPosts.filter(post => 
   post.data.category === 'earth-brain' || post.data.title.includes('🌍')
 )
+
+// 2. 将文章按标签细分（对应你在 .md 文件里写的 tags）
+const moviePosts = brainPosts.filter(post => post.data.tags?.includes('电影'))
+const gamePosts = brainPosts.filter(post => post.data.tags?.includes('游戏'))
+// 剩下的没打标签的放在“其他”
+const otherPosts = brainPosts.filter(post => !post.data.tags?.includes('电影') && !post.data.tags?.includes('游戏'))
 ---
 
 <IndexLayout title="🌍 地球大脑 | ヨヨの世界" description="放我喜欢的东西：电影、游戏、书">
   <div style="margin-bottom: 2rem;">
-    <h1 style="font-size: 2rem; font-weight: bold;">🌍 </h1>
+    <h1 style="font-size: 2rem; font-weight: bold;">🌍</h1>
     <p style="opacity: 0.8; margin-top: 0.5rem;">所有喜欢的东西。</p>
   </div>
 
   <main>
-    {posts.length > 0 ? (
-      <PostList posts={posts} />
-    ) : (
+    {brainPosts.length === 0 ? (
       <p style="padding: 2rem; border: 1px dashed var(--text-primary); text-align: center;">
         大脑空荡荡... 快去 src/content/posts 里写第一篇笔记吧！<br/>
         (记得在文章开头写上 category: earth-brain)
       </p>
+    ) : (
+      <>
+        {/* 电影区：只有当你写了带“电影”标签的文章才会显示 */}
+        {moviePosts.length > 0 && (
+          <div class="category-section">
+            <h2 class="cat-title"><img src="/movie-icon.png" class="cat-icon" /> 电影记录</h2>
+            <PostList posts={moviePosts} />
+          </div>
+        )}
+
+        {/* 游戏区：只有当你写了带“游戏”标签的文章才会显示 */}
+        {gamePosts.length > 0 && (
+          <div class="category-section">
+            <h2 class="cat-title"><img src="/game-icon.png" class="cat-icon" /> 游戏存档</h2>
+            <PostList posts={gamePosts} />
+          </div>
+        )}
+
+        {/* 其他区：没分类的显示在这里 */}
+        {otherPosts.length > 0 && (
+          <div class="category-section">
+            <h2 class="cat-title">✨ 其他碎片</h2>
+            <PostList posts={otherPosts} />
+          </div>
+        )}
+      </>
     )}
   </main>
 </IndexLayout>
+
+<style>
+  .category-section {
+    margin-bottom: 3rem;
+    padding-top: 1rem;
+  }
+  .cat-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid var(--text-primary);
+    padding-bottom: 0.5rem;
+  }
+  .cat-icon {
+    width: 32px;
+    height: 32px;
+    object-fit: contain;
+  }
+</style>
