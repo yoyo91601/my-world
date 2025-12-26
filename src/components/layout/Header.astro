@@ -20,7 +20,21 @@ import ThemeToggle from '@/components/ui/ThemeToggle.astro'
 </header>
 
 <style>
-  header {
+.nav-links {
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+  }
+  .nav-links a {
+    font-size: 1.2rem; /* 让地球稍微大一点点，呼应复古感 */
+    text-decoration: none;
+    transition: transform 0.2s ease; /* 增加一个微妙的缩放效果 */
+    display: inline-block;
+  }
+  .nav-links a:hover {
+    transform: scale(1.2); /* 鼠标移上去轻轻放大，这是互动的小惊喜 */
+  } 
+header {
     margin: 2rem 0; /* 增加一点留白，更有呼吸感 */
   }
   nav {
