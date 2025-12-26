@@ -1,0 +1,34 @@
+---
+import IndexLayout from '@/layouts/IndexLayout.astro'
+// 我们不用默认的 About 组件，换成地球大脑的介绍
+import PostList from '@/components/widgets/PostList.astro'
+import { themeConfig } from '@/config'
+import { getSortedFilteredPosts } from '@/utils/draft'
+
+// 获取所有文章
+const allPosts = await getSortedFilteredPosts()
+
+// 【关键修改】只筛选标题里带有“🌍”或者你在文章里打过“地球大脑”标签的内容
+// 或者简单点：筛选 category 为 "earth-brain" 的文章
+const posts = allPosts.filter(post => 
+  post.data.category === 'earth-brain' || post.data.title.includes('🌍')
+)
+---
+
+<IndexLayout title="🌍 地球大脑 | ヨヨの世界" description="放我喜欢的东西：电影、游戏、书">
+  <div style="margin-bottom: 2rem;">
+    <h1 style="font-size: 2rem; font-weight: bold;">🌍 </h1>
+    <p style="opacity: 0.8; margin-top: 0.5rem;">所有喜欢的东西。</p>
+  </div>
+
+  <main>
+    {posts.length > 0 ? (
+      <PostList posts={posts} />
+    ) : (
+      <p style="padding: 2rem; border: 1px dashed var(--text-primary); text-align: center;">
+        大脑空荡荡... 快去 src/content/posts 里写第一篇笔记吧！<br/>
+        (记得在文章开头写上 category: earth-brain)
+      </p>
+    )}
+  </main>
+</IndexLayout>
