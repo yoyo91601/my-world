@@ -5,24 +5,40 @@ import ThemeToggle from '@/components/ui/ThemeToggle.astro'
 
 <header>
   <nav>
-    <a href="/">{themeConfig.site.title}</a>
+    <div class="logo-wrapper">
+      <img src="/my-avatar.png" alt="logo" class="nav-avatar" />
+      <a href="/">{themeConfig.site.title}</a>
+    </div>
     <ThemeToggle />
   </nav>
 </header>
+
 <style>
   header {
-    margin: 0;
+    margin: 2rem 0; /* 增加一点留白，更有呼吸感 */
   }
   nav {
     display: flex;
     justify-content: space-between;
     align-items: center;
   }
+  .logo-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 12px; /* 图片和文字的距离 */
+  }
+  .nav-avatar {
+    width: 40px;  /* 头像大小，你可以自己调 */
+    height: 40px;
+    border-radius: 50%; /* 圆形头像 */
+    border: 2px solid var(--text-primary); /* 给头像加个复古边框 */
+    object-fit: cover;
+  }
   header a {
     font-weight: var(--font-weight-bold);
     color: var(--text-primary);
     text-decoration: none;
-    min-width: 3rem;
-    display: inline-block;
+    font-size: 1.2rem; /* 让标题大一点 */
+    letter-spacing: 1px; /* 增加字间距，更有设计感 */
   }
 </style>
