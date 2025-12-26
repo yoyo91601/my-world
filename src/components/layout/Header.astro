@@ -5,12 +5,18 @@ import ThemeToggle from '@/components/ui/ThemeToggle.astro'
 
 <header>
   <nav>
-    <div class="logo-wrapper">
-      <img src="/my-avatar.png" alt="logo" class="nav-avatar" />
-      <a href="/">{themeConfig.site.title}</a>
-    </div>
-    <ThemeToggle />
-  </nav>
+  <div class="logo-wrapper">
+    <img src="/my-avatar.png" alt="logo" class="nav-avatar" />
+    <a href="/">{themeConfig.site.title}</a>
+  </div>
+  
+  <div class="nav-links">
+    <a href="/posts">归档</a>
+    <a href="/earth-brain">🌍地球大脑</a>
+  </div>
+
+  <ThemeToggle />
+</nav>
 </header>
 
 <style>
