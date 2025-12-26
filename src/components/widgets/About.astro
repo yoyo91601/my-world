@@ -1,25 +1,34 @@
 ---
-import { getEntry } from 'astro:content'
-import { render } from 'astro:content'
-
-const aboutEntry = await getEntry('about', 'about')
-// Check if there is actual content (excluding comments)
-const hasContent = aboutEntry?.body
-  ? aboutEntry.body.replace(/<!--[\s\S]*?-->/g, '').trim().length > 0
-  : false
-const { Content } = hasContent && aboutEntry ? await render(aboutEntry) : { Content: null }
+import { themeConfig } from '@/config'
 ---
 
-{
-  hasContent && Content && (
-    <div class="about prose">
-      <Content />
-    </div>
-  )
-}
+<section class="about-section">
+  <h1>{themeConfig.site.title}</h1>
+  <div class="description">
+    <p>这里是<strong>ヨヨ的世界</p>
+    <p>一些对抗虚无的乱七八糟的东西。</p>
+    <p>在网络圈出一块地，点击右上角的 🌍 进入地球的大脑。</p>
+  </div>
+</section>
 
 <style>
-  .about:not(:empty) {
-    margin-bottom: 1.25rem;
+  .about-section {
+    margin: 3rem 0;
+  }
+  h1 {
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 1.5rem;
+    letter-spacing: 2px;
+  }
+  .description p {
+    margin-bottom: 0.8rem;
+    line-height: 1.6;
+    opacity: 0.8;
+    font-size: 1rem;
+  }
+  strong {
+    border-bottom: 2px solid var(--text-primary);
+    padding-bottom: 2px;
   }
 </style>
